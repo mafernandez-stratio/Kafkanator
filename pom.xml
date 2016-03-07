@@ -59,9 +59,9 @@
 			<version>${kafka.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.codearte.jfairy</groupId>
-			<artifactId>jfairy</artifactId>
-			<version>${jfairy.version}</version>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>0.8.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

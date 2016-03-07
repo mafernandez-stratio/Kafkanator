@@ -2,14 +2,64 @@ package io.github.miguel0afd
 
 import java.util.HashMap
 
-import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
-/**
-  * Created by miguelangelfernandezdiaz on 04/03/16.
-  */
-class Kafkanator {
+object Kafkanator extends App {
 
   val props = new HashMap[String, Object]()
+  props.put("bootstrap.servers", "localhost:9092")
+  props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+  props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+  props.put("group.id", "crossdatatest")
   val producer = new KafkaProducer[String, String](props)
 
+  val products = List(
+    "Shoes",
+    "Shirt",
+    "Apple",
+    "Laptop",
+    "Television",
+    "Telephone",
+    "Orange",
+    "Computer",
+    "Bread",
+    "Chair",
+    "Table",
+    "Chicken",
+    "Pencil")
+
+  val cities = List(
+    "Madrid",
+    "Sevilla",
+    "Barcelona",
+    "Salamanca",
+    "Vigo",
+    "Valencia",
+    "Bilbao"
+  )
+
+  while(true){
+
+    Thread.sleep(Utils.randomInt(100, 2000))
+
+    val m = Map(
+      "clientId" -> Utils.randomInt(1, 20),
+      "center" -> cities(Utils.randomInt(0, cities.length-1)),
+      "product" -> products(Utils.randomInt(0, products.length-1)),
+      "price" -> Utils.randomInt(1, 2000)
+    )
+
+    val message = new ProducerRecord[String, String](
+      "testTopic",
+      s"""{"clientId": ${m.get("clientId").get},
+         | "center": "${m.get("center").get}",
+         | "product": "${m.get("product").get}",
+         | "price": ${m.get("price").get}}""".stripMargin.replace(System.lineSeparator(), ""))
+
+    println(s"Record: $message")
+
+    producer.send(message)
+  }
+
 }
+
