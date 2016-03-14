@@ -4,13 +4,19 @@ import java.util.HashMap
 
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
+import scala.util.Try
+
 object Kafkanator extends App {
+
+  val topic = Try(args(0)).getOrElse("inputTopic")
+
+  println(s"TOPIC: $topic")
 
   val props = new HashMap[String, Object]()
   props.put("bootstrap.servers", "localhost:9092")
   props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
-  props.put("group.id", "crossdatatest")
+  props.put("group.id", "xd1")
   val producer = new KafkaProducer[String, String](props)
 
   val products = List(
@@ -50,7 +56,7 @@ object Kafkanator extends App {
     )
 
     val message = new ProducerRecord[String, String](
-      "testTopic",
+      topic,
       s"""{"clientId": ${m.get("clientId").get},
          | "center": "${m.get("center").get}",
          | "product": "${m.get("product").get}",
