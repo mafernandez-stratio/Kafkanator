@@ -54,7 +54,7 @@ object Kafkanator extends App {
 
   while(true){
 
-    Thread.sleep(Utils.randomInt(100, 2000))
+    Thread.sleep(Utils.randomInt(min_random, max_random))
 
     val m = Map(
       "clientId" -> Utils.randomInt(1, 20),
