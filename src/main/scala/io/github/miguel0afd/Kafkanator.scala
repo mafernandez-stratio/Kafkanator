@@ -10,10 +10,12 @@ object Kafkanator extends App {
 
   val topic = Try(args(0)).getOrElse("inputTopic")
 
+  val host = Try(args(1)).getOrElse("localhost")
+
   println(s"TOPIC: $topic")
 
   val props = new HashMap[String, Object]()
-  props.put("bootstrap.servers", "localhost:9092")
+  props.put("bootstrap.servers", s"$host:9092")
   props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("group.id", "xd1")
