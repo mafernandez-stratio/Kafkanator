@@ -12,6 +12,12 @@ object Kafkanator extends App {
 
   val host = Try(args(1)).getOrElse("localhost")
 
+  val min_random = Try(args(2).toInt).getOrElse(100)
+
+  val max_random = Try(args(3).toInt).getOrElse(2000)
+
+  assert(max_random > min_random, "Wrong arguments: max random time must be greater that min random time")
+
   println(s"TOPIC: $topic")
 
   val props = new HashMap[String, Object]()
