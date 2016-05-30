@@ -35,13 +35,13 @@ object Kafkanator extends App {
     "Pencil")
 
   val cities = List(
-    "Madrid",
-    "Sevilla",
-    "Barcelona",
-    "Salamanca",
-    "Vigo",
-    "Valencia",
-    "Bilbao"
+    "Chicago",
+    "Houston",
+    "Philadelphia",
+    "Phoenix",
+    "Portland",
+    "Boston",
+    "Seattle"
   )
 
   while(true){
