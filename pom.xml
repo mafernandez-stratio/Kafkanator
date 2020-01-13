@@ -10,43 +10,14 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<scala.version>2.10.5</scala.version>
-		<scala.version.tools>2.10</scala.version.tools>
-		<kafka.version>0.8.2.2</kafka.version>
-		<jfairy.version>0.5.2</jfairy.version>
+		<scala.binary.version>2.11</scala.binary.version>
+		<scala.version>${scala.binary.version}.8</scala.version>
+		<kafka.version>2.0.1</kafka.version>
+		<jfairy.version>0.5.9</jfairy.version>
+		<logback.version>1.2.3</logback.version>
+		<scala.logging.version>3.9.2</scala.logging.version>
 	</properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>scala-maven-plugin</artifactId>
-				<version>3.2.0</version>
-				<executions>
-					<execution>
-						<!-- this is so we don't end with a compile error in maven-compiler-plugin -->					
-						<phase>process-sources</phase> 					
-						<goals>
-							<goal>compile</goal>
-							<goal>testCompile</goal>
-						</goals>
-						<configuration>
-							<mainSourceDir>${project.build.sourceDirectory}/../java</mainSourceDir>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>org.scala-lang</groupId>
@@ -59,27 +30,32 @@
 			<version>${kafka.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_2.10</artifactId>
-			<version>0.8.2.2</version>
+			<groupId>io.codearte.jfairy</groupId>
+			<artifactId>jfairy</artifactId>
+			<version>${jfairy.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.scalacheck</groupId>
-			<artifactId>scalacheck_${scala.version.tools}</artifactId>
-			<version>1.11.4</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.scalatest</groupId>
-			<artifactId>scalatest_${scala.version.tools}</artifactId>
-			<version>2.2.0</version>
-			<scope>test</scope>
+			<groupId>com.typesafe.scala-logging</groupId>
+			<artifactId>scala-logging_${scala.binary.version}</artifactId>
+			<version>${scala.logging.version}</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<sourceDirectory>src/main/scala</sourceDirectory>
+		<directory>${project.basedir}/target/${scala.binary.version}</directory>
+		<outputDirectory>${project.build.directory}/classes</outputDirectory>
+		<plugins>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>scala-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
