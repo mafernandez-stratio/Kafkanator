@@ -4,7 +4,6 @@ import java.util.HashMap
 
 import com.typesafe.scalalogging.Logger
 import io.codearte.jfairy.Fairy
-import io.github.miguel0afd.Kafkanator.{cities, fairyProducer, products}
 import org.apache.kafka.clients.producer.{Callback, KafkaProducer, ProducerRecord, RecordMetadata}
 
 import scala.util.{Failure, Success, Try}
@@ -33,7 +32,7 @@ object Kafkanator extends App {
   Try(args(0)) match {
     case Success(value) if value.equals("--help") =>
       logger.info(s"Usage: Kafkanator [topic] [bootstrap-servers] [min-sleep] [max-sleep] [group-id]")
-      logger.info(s"Default: topic -> test, bootstrap-servers -> localhost:9092, min-sleep -> 100, max-sleep -> 2000, group-id -> test")
+      logger.info(s"Default: topic -> kafkanator, bootstrap-servers -> localhost:9092, min-sleep -> 100, max-sleep -> 2000, group-id -> kafkanator")
       sys.exit()
     case Failure(_) =>
       logger.info("Starting Kafkanator")
@@ -59,6 +58,8 @@ object Kafkanator extends App {
   props.put("linger.ms", 1)
   props.put("buffer.memory", 33554432)
   props.put("retries", 10)
+  props.put("batch.size", 16384)
+  props.put("connections.max.idle.ms", 540000)
   val producer = new KafkaProducer[String, String](props)
 
   val products = List(
@@ -69,6 +70,7 @@ object Kafkanator extends App {
     "Television",
     "Telephone",
     "Orange",
+    "Strawberries",
     "Computer",
     "Bread",
     "Chair",
@@ -90,7 +92,8 @@ object Kafkanator extends App {
     "Seattle",
     "Detroit",
     "Milwaukee",
-    "Austin"
+    "Austin",
+    "Charleston"
   )
 
   val fairy = Fairy.create()
@@ -101,7 +104,7 @@ object Kafkanator extends App {
     Thread.sleep(fairy.baseProducer.randomBetween(minWait, maxWait))
 
     val m = Map(
-      KeyClient -> fairyProducer.randomBetween(1, 20),
+      KeyClient -> fairyProducer.randomBetween(1, 100),
       KeyCenter -> cities(fairyProducer.randomBetween(0, cities.length-1)),
       KeyProduct -> products(fairyProducer.randomBetween(0, products.length-1)),
       KeyPrice -> fairyProducer.randomBetween(1, 2000)
@@ -124,7 +127,7 @@ object Kafkanator extends App {
             logger.error(s"Message '$message' couldn't be sent", e)
             e.printStackTrace()
           }.getOrElse{
-            logger.info(s"The offset of the record we just sent is: ${metadata.offset()}")
+            logger.info(s"The offset of the record we just sent is: ${metadata.offset}")
           }
         }
       }
