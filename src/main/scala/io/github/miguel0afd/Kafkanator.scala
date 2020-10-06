@@ -4,17 +4,24 @@ import java.util.HashMap
 
 import com.typesafe.scalalogging.Logger
 import io.codearte.jfairy.Fairy
+import io.github.miguel0afd.Kafkanator.{cities, fairyProducer, products}
 import org.apache.kafka.clients.producer.{Callback, KafkaProducer, ProducerRecord, RecordMetadata}
 
 import scala.util.{Failure, Success, Try}
 
 object Defaults {
-  val DefaultTopic = "test"
+  val DefaultTopic = "kafkanator"
   val DefaultServers = "127.0.0.1:9092"
   val DefaultInterval = (100, 2000)
-  val DefaultGroupId = "test"
+  val DefaultGroupId = "kafkanator"
   val DefaultKeySerializer = "org.apache.kafka.common.serialization.StringSerializer"
   val DefaultValueSerializer = "org.apache.kafka.common.serialization.StringSerializer"
+
+  val KeyClient = "clientId"
+  val KeyCenter = "center"
+  val KeyProduct = "product"
+  val KeyPrice = "price"
+
 }
 
 object Kafkanator extends App {
@@ -49,6 +56,8 @@ object Kafkanator extends App {
   props.put("group.id", groupId)
   props.put("delivery.timeout.ms", 30000)
   props.put("acks", "all")
+  props.put("linger.ms", 1)
+  props.put("buffer.memory", 33554432)
   val producer = new KafkaProducer[String, String](props)
 
   val products = List(
@@ -65,7 +74,8 @@ object Kafkanator extends App {
     "Table",
     "Chicken",
     "Pencil",
-    "Meat"
+    "Meat",
+    "Trousers"
   )
 
   val cities = List(
@@ -76,7 +86,8 @@ object Kafkanator extends App {
     "Portland",
     "Boston",
     "Seattle",
-    "Detroit"
+    "Detroit",
+    "Milwaukee"
   )
 
   val fairy = Fairy.create()
@@ -87,18 +98,18 @@ object Kafkanator extends App {
     Thread.sleep(fairy.baseProducer.randomBetween(minWait, maxWait))
 
     val m = Map(
-      "clientId" -> fairyProducer.randomBetween(1, 20),
-      "center" -> cities(fairyProducer.randomBetween(0, cities.length-1)),
-      "product" -> products(fairyProducer.randomBetween(0, products.length-1)),
-      "price" -> fairyProducer.randomBetween(1, 2000)
+      KeyClient -> fairyProducer.randomBetween(1, 20),
+      KeyCenter -> cities(fairyProducer.randomBetween(0, cities.length-1)),
+      KeyProduct -> products(fairyProducer.randomBetween(0, products.length-1)),
+      KeyPrice -> fairyProducer.randomBetween(1, 2000)
     )
 
     val message = new ProducerRecord[String, String](
       topic,
-      s"""{"clientId": ${m.get("clientId").get},
-         | "center": "${m.get("center").get}",
-         | "product": "${m.get("product").get}",
-         | "price": ${m.get("price").get}}""".stripMargin.replace(System.lineSeparator(), ""))
+      s"""{"$KeyClient": ${m.getOrElse(KeyClient, null)},
+         | "$KeyCenter": "${m.getOrElse(KeyCenter, null)}",
+         | "$KeyProduct": "${m.getOrElse(KeyProduct, null)}",
+         | "$KeyProduct": ${m.getOrElse(KeyPrice, null)}}""".stripMargin.replace(System.lineSeparator, ""))
 
     logger.info(s"Record: $message")
 
