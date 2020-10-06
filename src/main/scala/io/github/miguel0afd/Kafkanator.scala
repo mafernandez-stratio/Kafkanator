@@ -58,6 +58,7 @@ object Kafkanator extends App {
   props.put("acks", "all")
   props.put("linger.ms", 1)
   props.put("buffer.memory", 33554432)
+  props.put("retries", 10)
   val producer = new KafkaProducer[String, String](props)
 
   val products = List(
@@ -75,7 +76,8 @@ object Kafkanator extends App {
     "Chicken",
     "Pencil",
     "Meat",
-    "Trousers"
+    "Trousers",
+    "Camera"
   )
 
   val cities = List(
@@ -87,7 +89,8 @@ object Kafkanator extends App {
     "Boston",
     "Seattle",
     "Detroit",
-    "Milwaukee"
+    "Milwaukee",
+    "Austin"
   )
 
   val fairy = Fairy.create()
