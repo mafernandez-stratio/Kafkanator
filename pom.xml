@@ -12,7 +12,7 @@
 		<java.version>1.8</java.version>
 		<scala.binary.version>2.11</scala.binary.version>
 		<scala.version>${scala.binary.version}.8</scala.version>
-		<kafka.version>2.0.1</kafka.version>
+		<kafka.version>2.6.0</kafka.version>
 		<jfairy.version>0.5.9</jfairy.version>
 		<logback.version>1.2.3</logback.version>
 		<scala.logging.version>3.9.2</scala.logging.version>
