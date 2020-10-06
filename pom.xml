@@ -10,7 +10,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<scala.binary.version>2.11</scala.binary.version>
+		<scala.binary.version>2.12</scala.binary.version>
 		<scala.version>${scala.binary.version}.8</scala.version>
 		<kafka.version>2.6.0</kafka.version>
 		<jfairy.version>0.5.9</jfairy.version>
