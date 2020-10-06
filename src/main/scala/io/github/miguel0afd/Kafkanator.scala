@@ -28,7 +28,8 @@ object Kafkanator extends App {
       logger.info(s"Usage: Kafkanator [topic] [bootstrap-servers] [min-sleep] [max-sleep] [group-id]")
       logger.info(s"Default: topic -> test, bootstrap-servers -> localhost:9092, min-sleep -> 100, max-sleep -> 2000, group-id -> test")
       sys.exit()
-    case Failure(_) => //No-op
+    case Failure(_) =>
+      logger.info("Starting Kafkanator")
   }
 
   val topic = Try(args(0)).getOrElse(DefaultTopic)
@@ -39,13 +40,15 @@ object Kafkanator extends App {
 
   assert(maxWait > minWait, "Wrong arguments: max random time must be greater that min random time")
 
-  logger.info(s"TOPIC: $topic")
+  logger.info(s"Topic: $topic")
 
   val props = new HashMap[String, Object]()
   props.put("bootstrap.servers", servers)
   props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("group.id", groupId)
+  props.put("delivery.timeout.ms", 30000)
+  props.put("acks", "all")
   val producer = new KafkaProducer[String, String](props)
 
   val products = List(
@@ -61,7 +64,9 @@ object Kafkanator extends App {
     "Chair",
     "Table",
     "Chicken",
-    "Pencil")
+    "Pencil",
+    "Meat"
+  )
 
   val cities = List(
     "Chicago",
@@ -70,7 +75,8 @@ object Kafkanator extends App {
     "Phoenix",
     "Portland",
     "Boston",
-    "Seattle"
+    "Seattle",
+    "Detroit"
   )
 
   val fairy = Fairy.create()
@@ -101,6 +107,7 @@ object Kafkanator extends App {
       new Callback() {
         override def onCompletion(metadata: RecordMetadata, exception: Exception): Unit = {
           Option(exception).map{ e =>
+            logger.error(s"Message '$message' couldn't be sent", e)
             e.printStackTrace()
           }.getOrElse{
             logger.info(s"The offset of the record we just sent is: ${metadata.offset()}")
