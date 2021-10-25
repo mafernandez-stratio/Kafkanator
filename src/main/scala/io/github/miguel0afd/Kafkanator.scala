@@ -56,6 +56,7 @@ object Kafkanator extends App {
   props.put("delivery.timeout.ms", 30000)
   props.put("acks", "all")
   props.put("linger.ms", 1)
+  props.put("acks", 1)
   props.put("buffer.memory", 33554432)
   props.put("retries", 10)
   props.put("batch.size", 16384)
@@ -70,6 +71,7 @@ object Kafkanator extends App {
     "Television",
     "Telephone",
     "Orange",
+    "Watermelon",
     "Strawberries",
     "Computer",
     "Bread",
@@ -90,6 +92,7 @@ object Kafkanator extends App {
     "Portland",
     "Boston",
     "Seattle",
+    "Miami",
     "Detroit",
     "Milwaukee",
     "Austin",
@@ -127,7 +130,7 @@ object Kafkanator extends App {
             logger.error(s"Message '$message' couldn't be sent", e)
             e.printStackTrace()
           }.getOrElse{
-            logger.info(s"The offset of the record we just sent is: ${metadata.offset}")
+            logger.info(s"The offset of the record sent is: ${metadata.offset}")
           }
         }
       }
