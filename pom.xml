@@ -13,7 +13,7 @@
 		<scala.binary.version>2.12</scala.binary.version>
 		<scala.version>${scala.binary.version}.15</scala.version>
 		<kafka.version>2.6.3</kafka.version>
-		<jfairy.version>0.5.9</jfairy.version>
+		<jfairy.version>0.6.5</jfairy.version>
 		<logback.version>1.2.3</logback.version>
 		<scala.logging.version>3.9.2</scala.logging.version>
 	</properties>
@@ -30,9 +30,9 @@
 			<version>${kafka.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.codearte.jfairy</groupId>
-			<artifactId>jfairy</artifactId>
-			<version>${jfairy.version}</version>
+  			<groupId>com.devskiller</groupId>
+  			<artifactId>jfairy</artifactId>
+  			<version>${jfairy.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
